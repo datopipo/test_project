@@ -22,7 +22,7 @@ router.post('/sign-up', async (req, res) => {
     res.send(data)
 })
 
-router.post('/login', async (req, res) => {
+router.post('/sign-in', async (req, res) => {
     const user = await User.findOne({email: req.body.email})
     if (!user) {
         return res.status(400).send({
