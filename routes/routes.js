@@ -2,6 +2,7 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const auth = require("../middleware/auth");
 
 router.post('/sign-up', async (req, res) => {
 
@@ -22,7 +23,7 @@ router.post('/sign-up', async (req, res) => {
     res.send(data)
 })
 
-router.post('/sign-in', async (req, res) => {
+router.post('/sign-in', auth , async (req, res) => {
     const user = await User.findOne({email: req.body.email})
     if (!user) {
         return res.status(400).send({
@@ -46,7 +47,7 @@ router.post('/sign-in', async (req, res) => {
     })
 })
 
-router.get('/user', async (req, res) => {
+router.get('/user', auth, async (req, res) => {
     try {
         const cookie = req.cookies['jwt']
 
@@ -77,7 +78,7 @@ router.post('/logout', (req, res) => {
     })
 })
 
-router.put('/users', async (req, res) => {
+router.put('/users', auth , async (req, res) => {
     try {
         const cookie = req.cookies['jwt']
 
@@ -108,7 +109,7 @@ router.put('/users', async (req, res) => {
 })
 
 
-router.delete('/users', async (req, res) => {
+router.delete('/users', auth,  async (req, res) => {
     try {
         const cookie = req.cookies['jwt']
         const claims = jwt.verify(cookie, 'secret')
